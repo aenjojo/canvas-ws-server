@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "dev": "bun --watch --no-clear-screen src/app.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.2.5"
+  },
+  "dependencies": {
+    "hono": "^4.7.4"
+  }
+}
