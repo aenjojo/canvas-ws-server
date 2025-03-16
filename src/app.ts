@@ -21,7 +21,6 @@ app.get('/ws', upgradeWebSocket(c => {
     return {
         onOpen(_evt, ws) {
             ws.send('hello');
-            wsStore.add(ws);
         },
         onMessage(evt, ws) {
             ws.send('pong');
@@ -29,8 +28,13 @@ app.get('/ws', upgradeWebSocket(c => {
                 const [,x,y] = evt.data.toString().split(';');
                 xSpeed = Number(x);
                 ySpeed = Number(y);
+                console.log('Updated');
             }
-            if (evt.data === 'stop') {
+            if (evt.data.toString() === 'sub') {
+                wsStore.add(ws);
+                console.log('Subscribed');
+            }
+            if (evt.data.toString() === 'stop') {
                 stopInterval();
                 console.log('Interval stopped');
             }
@@ -42,8 +46,6 @@ function startInterval() {
     if (intervalId) return;
 
     intervalId = setInterval(() => {
-        // console.log('Running at 4 FPS:', performance.now());
-
         x += xSpeed;
         y += ySpeed;
 
@@ -59,7 +61,7 @@ function startInterval() {
         for (let ws of wsStore) {
             ws.send(pos);
         }
-        console.log(pos);
+        // console.log(pos);
     }, 1000 / 60);
 }
 
